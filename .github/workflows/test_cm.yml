@@ -26,8 +26,7 @@ jobs:
         pip install pylint
 
     - name: Run unit tests
-      run: |
-        python -m unittest discover -s tests
+      run: python -m unittest discover -s cm/tests
 
     - name: Run pylint on src/
       run: |
