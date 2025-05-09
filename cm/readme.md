@@ -1,3 +1,8 @@
+# Prédiction du Coût Moyen (CM)
+
+![Tests](https://github.com/SamuelSB88/industrialisation_MSJ/actions/workflows/tests_cm.yml/badge.svg)
+
+
 # 📊 API de Prédiction du Coût Moyen (CM)
 
 Cette API permet de prédire un **coût moyen (CM)** à partir de variables d'entrée (structurelles, géographiques, météorologiques, etc.). Elle repose sur un modèle entraîné (XGBoost) encapsulé dans une classe `CMPredictor` avec encodage automatique des variables catégorielles.
