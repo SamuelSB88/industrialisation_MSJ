@@ -1,6 +1,6 @@
 # Prédiction du Coût Moyen (CM)
 
-![Tests](https://github.com/SamuelSB88/industrialisation_MSJ/actions/workflows/tests_cm.yml/badge.svg)
+![Tests](https://github.com/SamuelSB88/industrialisation_MSJ/actions/workflows/test_cm.yml)
 
 
 # 📊 API de Prédiction du Coût Moyen (CM)
