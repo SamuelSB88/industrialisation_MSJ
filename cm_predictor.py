@@ -1,17 +1,8 @@
-# cm_predictor.py
-
 """
 Refactoring du pipeline de prédiction CM
 
-### À propos de l'encapsulation dans une classe
-
-Certaines étapes du pipeline nécessitent un apprentissage préalable (ex: encodage de variables catégorielles avec TargetEncoder/CountEncoder). Afin de garantir la cohérence entre les données de train et les données de test, on encapsule tout dans une classe modulaire `CMPredictor`.
-
-Ce design permet :
-- de sauvegarder le modèle avec ses hyperparamètres
-- de rendre le preprocessing réutilisable sur d'autres jeux de données
-- d'intégrer ce module dans une API ou un pipeline complet
-
+Encapsule le modèle, l'encodage, le preprocessing et l'entraînement
+au sein d'une classe réutilisable CMPredictor.
 """
 
 import pandas as pd
