@@ -4,6 +4,7 @@ import pandas as pd
 import joblib
 import numpy as np
 from cm_predictor import CMPredictor
+from schemas import CMPredictionInput  # le schéma généré avec toutes les variables en int
 
 # Initialisation de l'app FastAPI
 app = FastAPI(title="API de Prédiction CM", version="1.0")
@@ -15,21 +16,16 @@ predictor = CMPredictor()
 predictor.model = model_cm
 predictor.encoder = encoder_cm
 
-class InputData(BaseModel):
-    data: list  # list of dicts (one per observation)
 
 @app.get("/health")
 def health_check():
     return {"status": "OK", "message": "API opérationnelle (CM uniquement)"}
 
+
 @app.post("/predict_montant")
-def predict_cm(input_data: InputData):
+def predict_cm(input_data: CMPredictionInput):
     try:
-        df = pd.DataFrame(input_data.data)
-
-        # ✅ Supprimer les colonnes si elles existent
-        df.drop(columns=["ID", "ANNEE_ASSURANCE"], inplace=True, errors="ignore")
-
+        df = pd.DataFrame([input_data.dict()])
         df = CMPredictor.reduce_memory_usage(df, verbose=False)
 
         y_pred = predictor.predict(
@@ -37,8 +33,8 @@ def predict_cm(input_data: InputData):
             df.select_dtypes(include='number').columns,
             df.select_dtypes(include='object').columns
         )
-        return {"prediction_cm": y_pred.tolist()}
+
+        return {"prediction_cm": float(y_pred[0])}  
+
     except Exception as e:
         return {"error": str(e)}
-
-    
