@@ -1,24 +1,34 @@
-name: Tests CM Pipeline
+name: Python Tests
 
 on:
-  workflow_dispatch:  # ➜ Permet de lancer manuellement
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
 
-      - name: Install deps
-        run: |
-          pip install -r cm/requirements.txt
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pylint
 
-      - name: Run tests
-        run: |
-          pytest cm/tests
+    - name: Run unit tests
+      run: |
+        python -m unittest discover -s tests
+
+    - name: Run pylint on src/
+      run: |
+        pylint src
