@@ -1,0 +1,119 @@
+# 📘 Rapport Technique — API Prédiction du Coût Moyen (CM)
+
+---
+
+## 🧩 Objectif du projet
+
+Ce projet a pour objectif de prédire le **coût moyen (CM)** d’assurance à partir de variables d’entrée. Il repose sur un modèle XGBoost optimisé via Optuna, encapsulé dans une API web utilisant **FastAPI**.
+
+---
+
+## 🚀 Technologies utilisées
+
+- **FastAPI** : pour exposer les modèles sous forme d'API REST performante
+- **Pydantic** : pour la validation des données d’entrée
+- **Uvicorn** : serveur ASGI léger pour lancer l'API
+- **XGBoost** : algorithme de boosting performant pour la régression
+- **Optuna** : framework d’optimisation d’hyperparamètres
+- **Scikit-learn** : pour les outils de split, métriques, encodage
+- **Joblib** : pour sérialiser/dé-sérialiser le modèle (.pkl)
+- **Pytest** : pour les tests unitaires
+
+---
+
+## 🧪 Tests unitaires (fichier `test_pipeline_unit.py`)
+
+### 1. `test_reduce_memory_usage()`
+- Vérifie que les colonnes numériques sont bien converties en types mémoire réduite (`int8`, `float32`, etc.)
+- Objectif : **optimisation mémoire**
+
+### 2. `test_compute_metrics()`
+- Vérifie que RMSE, rRMSE et MAPE sont correctement calculés à partir de `y_true` et `y_pred`
+- Objectif : **qualité de prédiction**
+
+### 3. `test_fill_missing()`
+- Vérifie que les colonnes numériques et catégorielles sont bien remplies (`0` ou `-999`) sans NaN
+- Objectif : **préparation des données fiable**
+
+---
+
+## 🧠 Structure du modèle
+
+Le modèle est encapsulé dans une classe appelée `CMPredictor`. Elle regroupe :
+
+| Méthode                           | Fonctionnalité                                                                 |
+|-----------------------------------|--------------------------------------------------------------------------------|
+| `reduce_memory_usage()`          | Réduit l'empreinte mémoire du DataFrame                                       |
+| `prepare_benchmark()`            | Crée un split train/validation stratifié sur `CHARGE`                         |
+| `fill_missing()`                 | Remplit les NaN : `0` pour numériques, `-999` pour catégorielles              |
+| `compute_metrics()`              | Calcule RMSE, rRMSE, MAPE                                                     |
+| `train()`                        | Lance Optuna pour chercher les meilleurs hyperparamètres et encoder           |
+| `predict()`                      | Effectue une prédiction sur jeu de données en appliquant l’encodeur          |
+| `plot_distribution()`           | Génère deux graphiques : histogramme CM réel, scatter log-log réel vs préd.  |
+
+---
+
+## 🌐 API REST - Routes disponibles
+
+| Route               | Méthode | Description                             |
+|---------------------|--------|------------------------------------------|
+| `/health`           | GET    | Vérifie que l’API est vivante            |
+| `/predict_montant`  | POST   | Prédit le coût moyen (CM)                |
+
+Exemple de requête :
+
+```json
+{
+  "data": [
+    {
+      "ID": 1,
+      "ANNEE_ASSURANCE": 1,
+      "VAR1": 12,
+      "VAR2": "ACTA"
+    }
+  ]
+}
+```
+
+---
+
+## 📦 Fichiers générés
+
+- `best_model_encoder_cm_xgb.pkl` : modèle entraîné + encodeur sauvegardés
+- `cm_predictions.csv` : sortie de prédiction sur les données de test
+
+---
+
+## 🔁 Fichier `.pkl` : réutilisation
+
+```python
+from cm_predictor import CMPredictor
+import joblib
+
+predictor = CMPredictor()
+predictor.model, predictor.encoder = joblib.load("best_model_encoder_cm_xgb.pkl")
+predictor.predict(df, numeric_cols, cat_cols)
+```
+
+---
+
+## 📁 Arborescence projet (principaux fichiers)
+
+```
+├── api_predict_cm.py
+├── main.py
+├── cm_predictor.py
+├── preprocessing.py
+├── test_pipeline_unit.py
+├── predict_from_pickle.py
+├── best_model_encoder_cm_xgb.pkl
+└── requirements.txt
+```
+
+---
+
+## ✅ Prochaines améliorations possibles
+
+- Ajout de `/predict_freq` avec un deuxième modèle
+- Dockerisation pour déploiement cloud
+- Ajout de logs d’erreur et vérifications de type avancées
