@@ -1,0 +1,31 @@
+name: Tests CM Pipeline
+
+on:
+  push:
+    paths:
+      - 'cm/**'
+  pull_request:
+    paths:
+      - 'cm/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r cm/requirements.txt
+
+      - name: Run unit tests
+        run: |
+          pytest cm/tests
