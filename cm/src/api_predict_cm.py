@@ -10,7 +10,7 @@ from schemas import CMPredictionInput  # le schéma généré avec toutes les va
 app = FastAPI(title="API de Prédiction CM", version="1.0")
 
 # Chargement du modèle de coût moyen
-model_cm, encoder_cm = joblib.load("best_model_encoder_cm_xgb.pkl")
+model_cm, encoder_cm = joblib.load("src/best_model_encoder_cm_xgb.pkl")
 
 predictor = CMPredictor()
 predictor.model = model_cm
