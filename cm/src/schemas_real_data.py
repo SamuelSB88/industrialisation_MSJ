@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import Optional, Any
 
 
-class RealDataInput(BaseModel):
+class CMPredictionInput(BaseModel):
     ID: int
     ACTIVIT2: str
     VOCATION: str
