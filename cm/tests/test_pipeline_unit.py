@@ -1,3 +1,9 @@
+# Ce script vérifie trois fonctionnalités clés :
+# 1. La réduction de la mémoire utilisée par un DataFrame (`reduce_memory_usage`)
+# 2. Le calcul correct des métriques d’évaluation (RMSE, RRMSE, MAPE) entre valeurs réelles et prédites (`compute_metrics`)
+# 3. Le bon remplissage des valeurs manquantes dans les colonnes numériques et catégorielles (`fill_missing`)
+
+
 import sys
 import os
 import unittest
